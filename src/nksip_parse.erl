@@ -214,10 +214,11 @@ packet(SrvId, CallId, NkPort, Packet) ->
             try 
                 MsgClass = case Class of
                     {req, Method, RUri} ->
+                        RUri1 = 
                         case nklib_parse:uris(RUri) of
-                            [RUri1] -> 
-                                [RUri1];
-                            _ -> RUri1 = 
+                            RUriL when is_list(RUriL) -> 
+                                RUriL;
+                            _ -> 
                                 throw({invalid, <<"Request-URI">>})
                         end,
                         {req, Method};
@@ -288,9 +289,10 @@ packet(SrvId, #nkport{transp=Transp}=NkPort, Packet) ->
                 end,
                 MsgClass = case Class of
                     {req, Method, RUri} ->
+                        RUri1 =
                         case nklib_parse:uris(RUri) of
-                            [RUri1] -> [RUri1];
-                            _ -> RUri1 = throw({invalid, <<"Request-URI">>})
+                            RUriL when is_list(RUriL) -> RUriL;
+                            _ -> throw({invalid, <<"Request-URI">>})
                         end,
                         {req, Method};
                     {resp, Code, Reason} ->
